@@ -1,0 +1,45 @@
+---
+import Base from "../../layouts/Base.astro";
+import DataTable from "../../components/DataTable.astro";
+import Related from "../../components/Related.astro";
+import deviations from "../../data/oncehuman_deviations.json";
+
+const n = (v) => {
+  const m = String(v ?? "").match(/-?\d+(?:\.\d+)?/);
+  return m ? parseFloat(m[0]) : "";
+};
+const rows = deviations
+  .map((x) => ({
+    name: `<a href="/deviations/${x.slug}/">${x.title}</a>`,
+    _sort: x.title.toLowerCase(),
+    dtype: (x.fields?.type || "").slice(0, 16),
+    rarity: (x.fields?.rarity || "").slice(0, 12),
+    quote: (x.fields?.quote || "").slice(0, 70),
+  }))
+  .sort((a, b) => a._sort.localeCompare(b._sort));
+---
+<Base
+  title="Once Human Deviations — ${deviations.length} entries with exact values"
+  description="deviation companions and abilities for ${deviations.length} Once Human deviations."
+>
+  <h1>Deviations</h1>
+  <p class="muted">${deviations.length} entries · click a column to sort.</p>
+  <DataTable
+    id="deviations"
+    rows={rows}
+    searchPlaceholder="Search deviations..."
+    columns={[
+      { key: "name", label: "Deviation" },
+      { key: "dtype", label: "Type" },
+      { key: "rarity", label: "Rarity" },
+      { key: "quote", label: "Notes" },
+    ]}
+  />
+  <Related
+    links={[
+      { href: "/food/", title: "Food", sub: "Energy & hydration" },
+      { href: "/rankings/", title: "Rankings", sub: "Best picks" },
+      { href: "/armor/", title: "Armor", sub: "Armor values" },
+    ]}
+  />
+</Base>

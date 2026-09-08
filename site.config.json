@@ -1,0 +1,32 @@
+{
+  "siteName": "OnceHumanDB",
+  "siteUrl": "https://oncehuman-db.pages.dev",
+  "tagline": "Once Human database — armor HP, weapon damage & food values",
+  "description": "Once Human stats: armor HP, durability and resistances, weapon damage, crit and magazine sizes, ammo and food values — with a food calculator.",
+  "adsenseClientId": "ca-pub-3245910354455258",
+  "adsensePublisherId": "pub-3245910354455258",
+  "favicon": "🌌",
+  "footerNote": "Unofficial fan-made database for Once Human. Not affiliated with Starry Studio.",
+  "theme": {
+    "bg": "#0f1218",
+    "bgSoft": "#151a22",
+    "card": "#1b2230",
+    "border": "#2e3a4d",
+    "text": "#e2e8f2",
+    "muted": "#8e9cb0",
+    "accent": "#7c6cf0",
+    "accent2": "#a394ff",
+    "good": "#7fb069",
+    "bad": "#c75146"
+  },
+  "nav": [
+    { "href": "/armor/", "label": "Armor" },
+    { "href": "/weapons/", "label": "Weapons" },
+    { "href": "/ammo/", "label": "Ammo" },
+    { "href": "/food/", "label": "Food" },
+    { "href": "/deviations/", "label": "Deviations" },
+    { "href": "/rankings/", "label": "Rankings" },
+    { "href": "/food-calculator/", "label": "Food Calculator", "tool": true },
+    { "href": "/search/", "label": "A-Z" }
+  ]
+}

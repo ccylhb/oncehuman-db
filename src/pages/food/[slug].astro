@@ -1,0 +1,44 @@
+---
+import Base from "../../layouts/Base.astro";
+import Related from "../../components/Related.astro";
+import EntryStats from "../../components/EntryStats.astro";
+import food from "../../data/oncehuman_food.json";
+
+export function getStaticPaths() {
+  return food.map((x) => ({ params: { slug: x.slug }, props: { x } }));
+}
+
+const { x } = Astro.props;
+const f = x.fields || {};
+const similar = food
+  .filter((o) => o.slug !== x.slug && (o.fields?.rarity || "") === (f.rarity || ""))
+  .slice(0, 6);
+---
+<Base
+  title={`${x.title} — Once Human food stats`}
+  description={`${x.title}: Once Human food values — exact stats from the wiki infobox.`}
+>
+  <h1>{x.title}</h1>
+  {f.quote && <p class="muted">{f.quote}</p>}
+  <EntryStats entry={x} keys={["status_energy", "status_hydration", "stack_size", "weight", "rarity", "type"]} labels={{ status_energy: "Energy", status_hydration: "Hydration", stack_size: "Stack size", weight: "Weight", rarity: "Rarity", type: "Type" }} />
+  <p>
+    {f.rarity && <span class="tag" style="margin:0.1rem">{f.rarity}</span>}
+    {f.armor_type && <span class="tag" style="margin:0.1rem">{f.armor_type}</span>}
+    {f.weapon_type && <span class="tag" style="margin:0.1rem">{f.weapon_type}</span>}
+    {f.type && <span class="tag" style="margin:0.1rem">{f.type}</span>}
+    {f.style && <span class="tag" style="margin:0.1rem">{f.style}</span>}
+  </p>
+  {f.armor_features && <p><strong>Features:</strong> {f.armor_features}</p>}
+  {f.weapon_features && <p><strong>Features:</strong> {f.weapon_features}</p>}
+  {x.intro && <p>{x.intro}</p>}
+  <Related
+    links={[
+      ...similar.map((s) => ({
+        href: `/food/${s.slug}/`,
+        title: s.title,
+      })),
+      { href: "/food/", title: "All Food", sub: "Sortable table" },
+      { href: "/rankings/", title: "Rankings", sub: "Best picks" },
+    ]}
+  />
+</Base>

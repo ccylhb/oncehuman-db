@@ -1,0 +1,106 @@
+---
+import Base from "../layouts/Base.astro";
+import Related from "../components/Related.astro";
+import armor from "../data/oncehuman_armor.json";
+import weapons from "../data/oncehuman_weapons.json";
+import food from "../data/oncehuman_food.json";
+
+const n = (v) => {
+  const m = String(v ?? "").match(/-?\d+(?:\.\d+)?/);
+  return m ? parseFloat(m[0]) : 0;
+};
+const topHp = armor.map((x) => ({ ...x, hp: n(x.fields?.hp) })).filter((x) => x.hp > 0).sort((a, b) => b.hp - a.hp).slice(0, 10);
+const topPoll = armor.map((x) => ({ ...x, p: n(x.fields?.pollution_resist) })).filter((x) => x.p > 0).sort((a, b) => b.p - a.p).slice(0, 10);
+const topDmg = weapons.map((x) => ({ ...x, dmg: n(x.fields?.dmg) })).filter((x) => x.dmg > 0).sort((a, b) => b.dmg - a.dmg).slice(0, 10);
+const topMag = weapons.map((x) => ({ ...x, mag: n(x.fields?.magazine_capacity) })).filter((x) => x.mag > 0).sort((a, b) => b.mag - a.mag).slice(0, 10);
+const topEnergy = food.map((x) => ({ ...x, e: n(x.fields?.status_energy) })).filter((x) => x.e > 0).sort((a, b) => b.e - a.e).slice(0, 10);
+const topHyd = food.map((x) => ({ ...x, h: n(x.fields?.status_hydration) })).filter((x) => x.h > 0).sort((a, b) => b.h - a.h).slice(0, 10);
+---
+<Base
+  title="Once Human Rankings — best armor HP, weapon damage & food"
+  description="Once Human leaderboards: highest HP armor, best pollution resistance, top weapon damage, biggest magazines, most energetic and hydrating food."
+>
+  <h1>Rankings</h1>
+  <p class="muted">Leaderboards computed from full infobox data. Click any entry for details.</p>
+
+  <div class="grid grid-2" style="margin:1.25rem 0">
+    <div class="card">
+      <h2 style="margin-top:0">🛡️ Highest HP armor</h2>
+      <ol class="rank-list">
+        {topHp.map((x) => (
+          <li>
+            <a href={`/armor/${x.slug}/`}>{x.title}</a>
+            <span class="muted"> — {x.hp} HP ({x.fields?.armor_type || "?"})</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+    <div class="card">
+      <h2 style="margin-top:0">☢️ Best pollution resistance</h2>
+      <ol class="rank-list">
+        {topPoll.map((x) => (
+          <li>
+            <a href={`/armor/${x.slug}/`}>{x.title}</a>
+            <span class="muted"> — {x.p}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+    <div class="card">
+      <h2 style="margin-top:0">🔫 Highest damage</h2>
+      <ol class="rank-list">
+        {topDmg.map((x) => (
+          <li>
+            <a href={`/weapons/${x.slug}/`}>{x.title}</a>
+            <span class="muted"> — {x.dmg} dmg</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+    <div class="card">
+      <h2 style="margin-top:0">📦 Biggest magazines</h2>
+      <ol class="rank-list">
+        {topMag.map((x) => (
+          <li>
+            <a href={`/weapons/${x.slug}/`}>{x.title}</a>
+            <span class="muted"> — {x.mag} rounds</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+    <div class="card">
+      <h2 style="margin-top:0">⚡ Most energetic food</h2>
+      <ol class="rank-list">
+        {topEnergy.map((x) => (
+          <li>
+            <a href={`/food/${x.slug}/`}>{x.title}</a>
+            <span class="muted"> — {x.e} energy</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+    <div class="card">
+      <h2 style="margin-top:0">💧 Best hydration</h2>
+      <ol class="rank-list">
+        {topHyd.map((x) => (
+          <li>
+            <a href={`/food/${x.slug}/`}>{x.title}</a>
+            <span class="muted"> — {x.h} hydration</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </div>
+
+  <Related
+    links={[
+      { href: "/food-calculator/", title: "Food Calculator", sub: "Plan your intake", tool: true },
+      { href: "/armor/", title: "Armor", sub: "All armor values" },
+      { href: "/weapons/", title: "Weapons", sub: "All weapon stats" },
+    ]}
+  />
+</Base>
+
+<style>
+  .rank-list { margin: 0; padding-left: 1.3rem; line-height: 1.9; }
+</style>

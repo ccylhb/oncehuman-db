@@ -1,0 +1,47 @@
+---
+import Base from "../../layouts/Base.astro";
+import DataTable from "../../components/DataTable.astro";
+import Related from "../../components/Related.astro";
+import ammo from "../../data/oncehuman_ammo.json";
+
+const n = (v) => {
+  const m = String(v ?? "").match(/-?\d+(?:\.\d+)?/);
+  return m ? parseFloat(m[0]) : "";
+};
+const rows = ammo
+  .map((x) => ({
+    name: `<a href="/ammo/${x.slug}/">${x.title}</a>`,
+    _sort: x.title.toLowerCase(),
+    atype: (x.fields?.type || "").slice(0, 16),
+    stack: n(x.fields?.stack_size),
+    rarity: (x.fields?.rarity || "").slice(0, 12),
+    quote: (x.fields?.quote || "").slice(0, 60),
+  }))
+  .sort((a, b) => a._sort.localeCompare(b._sort));
+---
+<Base
+  title="Once Human Ammo — ${ammo.length} entries with exact values"
+  description="rarity, type and stack sizes for ${ammo.length} Once Human ammo."
+>
+  <h1>Ammo</h1>
+  <p class="muted">${ammo.length} entries · click a column to sort.</p>
+  <DataTable
+    id="ammo"
+    rows={rows}
+    searchPlaceholder="Search ammo..."
+    columns={[
+      { key: "name", label: "Ammo" },
+      { key: "atype", label: "Type" },
+      { key: "stack", label: "Stack size", type: "number" },
+      { key: "rarity", label: "Rarity" },
+      { key: "quote", label: "Notes" },
+    ]}
+  />
+  <Related
+    links={[
+      { href: "/weapons/", title: "Weapons", sub: "Damage values" },
+      { href: "/rankings/", title: "Rankings", sub: "Best picks" },
+      { href: "/food/", title: "Food", sub: "Energy & hydration" },
+    ]}
+  />
+</Base>

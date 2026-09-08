@@ -1,0 +1,69 @@
+---
+import Base from "../layouts/Base.astro";
+import Related from "../components/Related.astro";
+import food from "../data/oncehuman_food.json";
+import armor from "../data/oncehuman_armor.json";
+import weapons from "../data/oncehuman_weapons.json";
+import ammo from "../data/oncehuman_ammo.json";
+import deviations from "../data/oncehuman_deviations.json";
+
+const total = food.length + armor.length + weapons.length + ammo.length + deviations.length;
+const n = (v) => {
+  const m = String(v ?? "").match(/-?\d+(?:\.\d+)?/);
+  return m ? parseFloat(m[0]) : 0;
+};
+const bestArmor = armor.map((x) => ({ ...x, hp: n(x.fields?.hp) })).filter((x) => x.hp > 0).sort((a, b) => b.hp - a.hp)[0];
+const bestWeapon = weapons.map((x) => ({ ...x, dmg: n(x.fields?.dmg) })).filter((x) => x.dmg > 0).sort((a, b) => b.dmg - a.dmg)[0];
+---
+<Base title="OnceHumanDB — Once Human armor HP, weapon damage & food values" description={`Once Human stats database: ${total} entries — armor HP/durability/resistances, weapon damage/crit/magazine, ammo and food values with a food calculator.`}>
+  <div style="text-align:center;margin:2.5rem 0 2rem">
+    <h1 style="font-size:clamp(2.2rem,6vw,3.4rem)">Survive the apocalypse, by the numbers.</h1>
+    <p class="muted" style="font-size:1.15rem;max-width:640px;margin:0.75rem auto">
+      {total} Once Human entries with exact values — what to wear, what to shoot, what to eat. Every stat, no fluff.
+    </p>
+    <p style="margin-top:1.5rem">
+      <a href="/weapons/" style="display:inline-block;background:var(--accent);color:var(--bg);font-weight:700;padding:0.7rem 1.4rem;border-radius:10px;margin:0.25rem">Weapons & damage</a>
+      <a href="/food-calculator/" style="display:inline-block;border:1px solid var(--accent);color:var(--accent);font-weight:700;padding:0.7rem 1.4rem;border-radius:10px;margin:0.25rem">Food Calculator</a>
+    </p>
+  </div>
+
+  <div class="grid grid-3" style="margin:2rem 0">
+    <a class="card" href="/armor/" style="color:inherit">
+      <div class="stat-num">{armor.length}</div>
+      <div class="stat-label">Armor · protection</div>
+      <p class="muted" style="font-size:0.9rem">HP, durability, pollution resistance and psi intensity.</p>
+    </a>
+    <a class="card" href="/weapons/" style="color:inherit">
+      <div class="stat-num">{weapons.length}</div>
+      <div class="stat-label">Weapons · damage</div>
+      <p class="muted" style="font-size:0.9rem">Damage, crit rate, weakspot damage and magazine size.</p>
+    </a>
+    <a class="card" href="/food/" style="color:inherit">
+      <div class="stat-num">{food.length}</div>
+      <div class="stat-label">Food · energy</div>
+      <p class="muted" style="font-size:0.9rem">Energy and hydration per item.</p>
+    </a>
+  </div>
+
+  <h2>Jump to the answer</h2>
+  <div class="card answer-card">
+    <ul style="margin:0;padding-left:1.2rem;line-height:2">
+      <li>Highest HP armor: <a href={`/armor/${bestArmor?.slug}/`}>{bestArmor?.title}</a> — {bestArmor?.hp} HP</li>
+      <li>Highest damage weapon: <a href={`/weapons/${bestWeapon?.slug}/`}>{bestWeapon?.title}</a> — {bestWeapon?.dmg} dmg</li>
+      <li>Deviations: <a href="/deviations/">{deviations.length} companions</a> · Ammo: <a href="/ammo/">{ammo.length} types</a></li>
+    </ul>
+  </div>
+
+  <Related
+    heading="All boards"
+    links={[
+      { href: "/armor/", title: "Armor", sub: `${armor.length} entries` },
+      { href: "/weapons/", title: "Weapons", sub: `${weapons.length} entries` },
+      { href: "/ammo/", title: "Ammo", sub: `${ammo.length} entries` },
+      { href: "/food/", title: "Food", sub: `${food.length} entries` },
+      { href: "/deviations/", title: "Deviations", sub: `${deviations.length} entries` },
+      { href: "/rankings/", title: "Rankings", sub: "Leaderboards" },
+      { href: "/food-calculator/", title: "Food Calculator", sub: "Plan your intake", tool: true },
+    ]}
+  />
+</Base>

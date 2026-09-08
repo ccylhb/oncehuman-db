@@ -1,0 +1,96 @@
+---
+import Base from "../layouts/Base.astro";
+import Related from "../components/Related.astro";
+import food from "../data/oncehuman_food.json";
+
+const n = (v) => {
+  const m = String(v ?? "").match(/-?\d+(?:\.\d+)?/);
+  return m ? parseFloat(m[0]) : 0;
+};
+const items = food
+  .map((x) => ({
+    slug: x.slug,
+    name: x.title,
+    energy: n(x.fields?.status_energy),
+    hydration: n(x.fields?.status_hydration),
+    weight: n(x.fields?.weight),
+  }))
+  .filter((x) => x.energy !== 0 || x.hydration !== 0)
+  .sort((a, b) => a.name.localeCompare(b.name));
+---
+<Base
+  title="Once Human Food Calculator — plan energy & hydration"
+  description="Pick Once Human food items and see total energy, hydration and carried weight — plan your survival diet in your browser."
+>
+  <h1>Food Calculator</h1>
+  <p class="muted">Pick what you plan to carry — totals update live. Energy and hydration drain constantly while exploring; keep both positive.</p>
+
+  <div class="grid grid-2" style="margin:1rem 0">
+    <div class="card">
+      <strong>1 · Pick items</strong>
+      <input id="q" type="search" placeholder="Filter food..." style="width:100%;max-width:320px;margin:0.5rem 0" />
+      <select id="pick" size="12" style="width:100%">
+        {items.map((x) => <option value={x.slug}>{x.name} ({x.energy} energy / {x.hydration} hydration)</option>)}
+      </select>
+      <button id="add" style="margin-top:0.5rem">Add →</button>
+    </div>
+    <div class="card">
+      <strong>2 · Your plan</strong>
+      <ul id="plan" style="min-height:180px"></ul>
+      <div class="stat-row" style="margin-top:0.75rem">
+        <div><div class="stat-num" id="tE">0</div><div class="stat-label">Energy</div></div>
+        <div><div class="stat-num" id="tH">0</div><div class="stat-label">Hydration</div></div>
+        <div><div class="stat-num" id="tW">0</div><div class="stat-label">Weight</div></div>
+      </div>
+      <p id="verdict" class="muted" style="margin-top:0.5rem"></p>
+      <button id="clear" style="background:var(--bg-soft);color:var(--text);border:1px solid var(--border)">Clear</button>
+    </div>
+  </div>
+
+  <script define:vars={{ items }}>
+    const plan = [];
+    const bySlug = Object.fromEntries(items.map((x) => [x.slug, x]));
+    const q = document.getElementById("q");
+    const pick = document.getElementById("pick");
+    const listEl = document.getElementById("plan");
+    const tE = document.getElementById("tE");
+    const tH = document.getElementById("tH");
+    const tW = document.getElementById("tW");
+    const verdict = document.getElementById("verdict");
+    const render = () => {
+      listEl.innerHTML = plan.map((s, i) => {
+        const it = bySlug[s];
+        return `<li>${it.name} — ${it.energy} energy, ${it.hydration} hydration <button data-i="${i}" style="padding:0 0.4rem;font-size:0.75rem">×</button></li>`;
+      }).join("");
+      const e = plan.reduce((a, s) => a + bySlug[s].energy, 0);
+      const h = plan.reduce((a, s) => a + bySlug[s].hydration, 0);
+      const w = plan.reduce((a, s) => a + bySlug[s].weight, 0);
+      tE.textContent = e; tH.textContent = h; tW.textContent = Math.round(w * 100) / 100;
+      verdict.textContent = e >= 100 && h >= 100
+        ? "✓ Solid supply of energy and hydration."
+        : e < 100 ? "Low energy — add more food." : "Low hydration — add drinks.";
+      listEl.querySelectorAll("button").forEach((b) =>
+        b.addEventListener("click", () => { plan.splice(+b.dataset.i, 1); render(); }));
+    };
+    document.getElementById("add").addEventListener("click", () => {
+      if (pick.value) { plan.push(pick.value); render(); }
+    });
+    document.getElementById("clear").addEventListener("click", () => { plan.length = 0; render(); });
+    const filter = () => {
+      const v = q.value.trim().toLowerCase();
+      Array.from(pick.options).forEach((o) => {
+        o.hidden = v && !o.textContent.toLowerCase().includes(v);
+      });
+    };
+    q.addEventListener("input", filter);
+    render();
+  </script>
+
+  <Related
+    links={[
+      { href: "/food/", title: "Food", sub: "All food values" },
+      { href: "/rankings/", title: "Rankings", sub: "Best food & armor" },
+      { href: "/armor/", title: "Armor", sub: "HP & resistances" },
+    ]}
+  />
+</Base>
