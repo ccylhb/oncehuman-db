@@ -16,6 +16,18 @@ const n = (v) => {
 };
 const bestArmor = armor.map((x) => ({ ...x, hp: n(x.fields?.hp) })).filter((x) => x.hp > 0).sort((a, b) => b.hp - a.hp)[0];
 const bestWeapon = weapons.map((x) => ({ ...x, dmg: n(x.fields?.dmg) })).filter((x) => x.dmg > 0).sort((a, b) => b.dmg - a.dmg)[0];
+const __ld = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "OnceHumanDB",
+  url: "https://oncehuman-db.pages.dev/",
+  potentialAction: {
+    "@type": "SearchAction",
+    target: { "@type": "EntryPoint", urlTemplate: "https://oncehuman-db.pages.dev/search/?q={search_term_string}" },
+    "query-input": "required name=search_term_string",
+  },
+};
+
 ---
 <Base title="OnceHumanDB — Once Human armor HP, weapon damage & food values" description={`Once Human stats database: ${total} entries — armor HP/durability/resistances, weapon damage/crit/magazine, ammo and food values with a food calculator.`}>
   <div style="text-align:center;margin:2.5rem 0 2rem">
@@ -76,4 +88,5 @@ const bestWeapon = weapons.map((x) => ({ ...x, dmg: n(x.fields?.dmg) })).filter(
       { href: "/food-calculator/", title: "Food Calculator", sub: "Plan your intake", tool: true },
     ]}
   />
+<script is:inline type="application/ld+json" set:html={JSON.stringify(__ld)}></script>
 </Base>

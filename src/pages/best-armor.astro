@@ -20,6 +20,16 @@ const rows = data.map((x: any) => ({
     atype: (x.fields?.armor_type || "").slice(0, 16),
     rarity: (x.fields?.rarity || "").slice(0, 12),
   }));
+const __ld = [
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: `Best Armor — Highest HP & Resistance`,
+    description: `Once Human armor ranked by max HP — durability, pollution resistance and psi intensity of every set.`,
+    mainEntityOfPage: "https://oncehuman-db.pages.dev/best-armor/",
+  },
+];
+
 ---
 <Base
   title={`Best Armor — Highest HP & Resistance`}
@@ -43,4 +53,5 @@ const rows = data.map((x: any) => ({
       { key: "rarity", label: "Rarity" },
     ]}
   />
+<script is:inline type="application/ld+json" set:html={JSON.stringify(__ld)}></script>
 </Base>

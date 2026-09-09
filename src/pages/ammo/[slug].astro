@@ -16,6 +16,25 @@ const similar = ammo
   .filter((o) => o.slug !== x.slug && (o.fields?.rarity || "") === (f.rarity || ""))
   .slice(0, 6);
 const ihtml = introHtml(x.intro, mesh, x.title);
+const __slug = Astro.params.slug;
+const __ld = [
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://oncehuman-db.pages.dev/" },
+      { "@type": "ListItem", position: 2, name: "Ammo", item: "https://oncehuman-db.pages.dev/ammo/" },
+      { "@type": "ListItem", position: 3, name: x.title },
+    ],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: x.title,
+    description: (x.intro || "").slice(0, 160),
+    mainEntityOfPage: "https://oncehuman-db.pages.dev" + "/ammo/" + __slug + "/",
+  },
+];
 ---
 <Base
   title={`${x.title} — Once Human ammo stats`}
@@ -44,4 +63,5 @@ const ihtml = introHtml(x.intro, mesh, x.title);
       { href: "/rankings/", title: "Rankings", sub: "Best picks" },
     ]}
   />
+<script is:inline type="application/ld+json" set:html={JSON.stringify(__ld)}></script>
 </Base>

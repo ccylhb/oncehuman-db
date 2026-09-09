@@ -20,6 +20,23 @@ const rows = weapons
     wtype: (x.fields?.weapon_type || "").slice(0, 16),
   }))
   .sort((a, b) => a._sort.localeCompare(b._sort));
+const __ld = [
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://oncehuman-db.pages.dev/" },
+      { "@type": "ListItem", position: 2, name: "Weapons", item: "https://oncehuman-db.pages.dev/weapons/" },
+    ],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Weapons",
+    mainEntityOfPage: "https://oncehuman-db.pages.dev/weapons/",
+  },
+];
+
 ---
 <Base
   title="Once Human Weapons — ${weapons.length} entries with exact values"
@@ -48,4 +65,5 @@ const rows = weapons
       { href: "/armor/", title: "Armor", sub: "Armor values" },
     ]}
   />
+<script is:inline type="application/ld+json" set:html={JSON.stringify(__ld)}></script>
 </Base>

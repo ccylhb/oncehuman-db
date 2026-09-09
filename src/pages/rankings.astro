@@ -15,6 +15,7 @@ const topDmg = weapons.map((x) => ({ ...x, dmg: n(x.fields?.dmg) })).filter((x) 
 const topMag = weapons.map((x) => ({ ...x, mag: n(x.fields?.magazine_capacity) })).filter((x) => x.mag > 0).sort((a, b) => b.mag - a.mag).slice(0, 10);
 const topEnergy = food.map((x) => ({ ...x, e: n(x.fields?.status_energy) })).filter((x) => x.e > 0).sort((a, b) => b.e - a.e).slice(0, 10);
 const topHyd = food.map((x) => ({ ...x, h: n(x.fields?.status_hydration) })).filter((x) => x.h > 0).sort((a, b) => b.h - a.h).slice(0, 10);
+
 ---
 <Base
   title="Once Human Rankings — best armor HP, weapon damage & food"

@@ -21,6 +21,23 @@ const rows = armor
     rarity: (x.fields?.rarity || "").slice(0, 12),
   }))
   .sort((a, b) => a._sort.localeCompare(b._sort));
+const __ld = [
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://oncehuman-db.pages.dev/" },
+      { "@type": "ListItem", position: 2, name: "Armor", item: "https://oncehuman-db.pages.dev/armor/" },
+    ],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Armor",
+    mainEntityOfPage: "https://oncehuman-db.pages.dev/armor/",
+  },
+];
+
 ---
 <Base
   title="Once Human Armor — ${armor.length} entries with exact values"
@@ -50,4 +67,5 @@ const rows = armor
       { href: "/food-calculator/", title: "Food Calculator", sub: "Plan intake", tool: true },
     ]}
   />
+<script is:inline type="application/ld+json" set:html={JSON.stringify(__ld)}></script>
 </Base>
