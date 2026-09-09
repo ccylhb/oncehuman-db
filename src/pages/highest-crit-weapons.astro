@@ -1,0 +1,46 @@
+---
+import Base from "../layouts/Base.astro";
+import DataTable from "../components/DataTable.astro";
+import weapons from "../data/oncehuman_weapons.json";
+const n = (v: any) => {
+  const m = String(v ?? "").match(/-?\d+(?:\.\d+)?/);
+  return m ? m[0] : "";
+};
+const nmax = (v: any) => { const ms = String(v ?? "").match(/-?\d+(?:\.\d+)?/g); return ms ? Math.max(...ms.map(Number)) : 0; };
+let data = weapons.slice();
+data = data.sort((a: any, b: any) => nmax(b.fields?.crit_dmg) - nmax(a.fields?.crit_dmg));
+const rows = data.map((x: any) => ({
+    name: `<a href="/weapons/${x.slug}/">${x.title}</a>${x.icon_file ? ` <img src="/icons/${x.icon_file}" alt="" width="22" height="22" style="vertical-align:middle" loading="lazy" />` : ""}`,
+
+    critdmg: nmax(x.fields?.crit_dmg),
+    critrate: nmax(x.fields?.crit_rate),
+    dmg: (x.fields?.dmg || "").slice(0, 12),
+    mag: nmax(x.fields?.magazine_capacity),
+    rate: nmax(x.fields?.fire_rate),
+    wtype: (x.fields?.weapon_type || x.fields?.style || "").slice(0, 18),
+    rarity: (x.fields?.rarity || "").slice(0, 12),
+  }));
+---
+<Base
+  title={`Highest Crit Damage Weapons — Crit Builds`}
+  description={`Once Human weapons ranked by crit damage — with crit rate, base damage, magazine and fire rate for every weapon type.`}
+>
+  <h1>Highest Crit Damage Weapons — Crit Builds</h1>
+  <p class="muted">Once Human weapons ranked by crit damage — with crit rate, base damage, magazine and fire rate for every weapon type.</p>
+  
+  <DataTable
+    id="highest-crit-weapons"
+    rows={rows as any}
+    searchPlaceholder="Filter..."
+    columns={[
+      { key: "name", label: "Weapon" },
+      { key: "critdmg", label: "Crit dmg", type: "number" },
+      { key: "critrate", label: "Crit rate %", type: "number" },
+      { key: "dmg", label: "Damage" },
+      { key: "mag", label: "Mag", type: "number" },
+      { key: "rate", label: "Fire rate", type: "number" },
+      { key: "wtype", label: "Type" },
+      { key: "rarity", label: "Rarity" },
+    ]}
+  />
+</Base>

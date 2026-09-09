@@ -3,6 +3,8 @@ import Base from "../../layouts/Base.astro";
 import Related from "../../components/Related.astro";
 import EntryStats from "../../components/EntryStats.astro";
 import food from "../../data/oncehuman_food.json";
+import mesh from "../../data/mesh.json";
+import { introHtml } from "../../lib/mesh";
 
 export function getStaticPaths() {
   return food.map((x) => ({ params: { slug: x.slug }, props: { x } }));
@@ -13,6 +15,7 @@ const f = x.fields || {};
 const similar = food
   .filter((o) => o.slug !== x.slug && (o.fields?.rarity || "") === (f.rarity || ""))
   .slice(0, 6);
+const ihtml = introHtml(x.intro, mesh, x.title);
 ---
 <Base
   title={`${x.title} — Once Human food stats`}
@@ -30,7 +33,7 @@ const similar = food
   </p>
   {f.armor_features && <p><strong>Features:</strong> {f.armor_features}</p>}
   {f.weapon_features && <p><strong>Features:</strong> {f.weapon_features}</p>}
-  {x.intro && <p>{x.intro}</p>}
+  {ihtml && <p set:html={ihtml}></p>}
   <Related
     links={[
       ...similar.map((s) => ({

@@ -1,0 +1,46 @@
+---
+import Base from "../layouts/Base.astro";
+import DataTable from "../components/DataTable.astro";
+import armor from "../data/oncehuman_armor.json";
+const n = (v: any) => {
+  const m = String(v ?? "").match(/-?\d+(?:\.\d+)?/);
+  return m ? m[0] : "";
+};
+const nmax = (v: any) => { const ms = String(v ?? "").match(/-?\d+(?:\.\d+)?/g); return ms ? Math.max(...ms.map(Number)) : 0; };
+let data = armor.slice();
+data = data.sort((a: any, b: any) => nmax(b.fields?.hp) - nmax(a.fields?.hp));
+const rows = data.map((x: any) => ({
+    name: `<a href="/armor/${x.slug}/">${x.title}</a>${x.icon_file ? ` <img src="/icons/${x.icon_file}" alt="" width="22" height="22" style="vertical-align:middle" loading="lazy" />` : ""}`,
+
+    hp: nmax(x.fields?.hp),
+    hpraw: (x.fields?.hp || "").slice(0, 10),
+    dur: nmax(x.fields?.durability),
+    poll: nmax(x.fields?.pollution_resist),
+    psi: nmax(x.fields?.psi_intensity),
+    atype: (x.fields?.armor_type || "").slice(0, 16),
+    rarity: (x.fields?.rarity || "").slice(0, 12),
+  }));
+---
+<Base
+  title={`Best Armor — Highest HP & Resistance`}
+  description={`Once Human armor ranked by max HP — durability, pollution resistance and psi intensity of every set.`}
+>
+  <h1>Best Armor — Highest HP & Resistance</h1>
+  <p class="muted">Once Human armor ranked by max HP — durability, pollution resistance and psi intensity of every set.</p>
+  
+  <DataTable
+    id="best-armor"
+    rows={rows as any}
+    searchPlaceholder="Filter..."
+    columns={[
+      { key: "name", label: "Armor" },
+      { key: "hp", label: "HP (max)", type: "number" },
+      { key: "hpraw", label: "HP range" },
+      { key: "dur", label: "Durability", type: "number" },
+      { key: "poll", label: "Pollution resist", type: "number" },
+      { key: "psi", label: "Psi intensity", type: "number" },
+      { key: "atype", label: "Type" },
+      { key: "rarity", label: "Rarity" },
+    ]}
+  />
+</Base>
