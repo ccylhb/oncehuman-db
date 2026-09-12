@@ -1,4 +1,5 @@
 ---
+const SITE = Astro.site?.origin ?? "";
 import Base from "../layouts/Base.astro";
 import DataTable from "../components/DataTable.astro";
 import weapons from "../data/oncehuman_weapons.json";
@@ -26,7 +27,7 @@ const __ld = [
     "@type": "Article",
     headline: `Highest Crit Damage Weapons — Crit Builds`,
     description: `Once Human weapons ranked by crit damage — with crit rate, base damage, magazine and fire rate for every weapon type.`,
-    mainEntityOfPage: "https://oncehuman-db.pages.dev/highest-crit-weapons/",
+    mainEntityOfPage: SITE + "/highest-crit-weapons/",
   },
 ];
 
