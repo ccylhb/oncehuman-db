@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://oncehuman-db.pages.dev/sitemap.xml
