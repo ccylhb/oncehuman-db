@@ -6,6 +6,7 @@ import EntryStats from "../../components/EntryStats.astro";
 import weapons from "../../data/oncehuman_weapons.json";
 import mesh from "../../data/mesh.json";
 import { introHtml } from "../../lib/mesh";
+import { cl, pick, desc, stats, introSentence, best } from "../../lib/seo";
 
 export function getStaticPaths() {
   return weapons.map((x) => ({ params: { slug: x.slug }, props: { x } }));
@@ -36,10 +37,26 @@ const __ld = [
     mainEntityOfPage: SITE + "/weapons/" + __slug + "/",
   },
 ];
+
+// SEO: lead with concrete stats; fall back to the scraped intro sentence.
+const description =
+  desc(
+    `${x.title}:`,
+    cl(f.rarity) && cl(f.weapon_type) && `${cl(f.rarity)} ${cl(f.weapon_type)}${f.style ? ` (${cl(f.style)})` : ""} —`,
+    stats(
+      cl(f.dmg) && `damage ${cl(f.dmg)}`,
+      cl(f.fire_rate) && `fire rate ${cl(f.fire_rate)}`,
+      cl(f.crit_rate) && `crit ${cl(f.crit_rate)}/${pick(f.crit_dmg) || "-"}`,
+      cl(f.weakspot_dmg) && `weakspot ${cl(f.weakspot_dmg)}`,
+      cl(f.magazine_capacity) && `magazine ${cl(f.magazine_capacity)}`,
+      cl(f.durability) && `durability ${cl(f.durability)}`
+    ),
+    "Once Human weapon stats."
+  ) || introSentence(x.intro);
 ---
 <Base
   title={`${x.title} — Once Human weapons stats`}
-  description={`${x.title}: Once Human weapons values — exact stats from the wiki infobox.`}
+  description={description}
 >
   <h1>{x.title}</h1>
   {f.quote && <p class="muted">{f.quote}</p>}

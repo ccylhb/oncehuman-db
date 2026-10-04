@@ -6,6 +6,7 @@ import EntryStats from "../../components/EntryStats.astro";
 import food from "../../data/oncehuman_food.json";
 import mesh from "../../data/mesh.json";
 import { introHtml } from "../../lib/mesh";
+import { cl, pick, desc, stats, introSentence, best } from "../../lib/seo";
 
 export function getStaticPaths() {
   return food.map((x) => ({ params: { slug: x.slug }, props: { x } }));
@@ -36,10 +37,24 @@ const __ld = [
     mainEntityOfPage: SITE + "/food/" + __slug + "/",
   },
 ];
+
+// SEO: lead with concrete stats; fall back to the scraped intro sentence.
+const description =
+  desc(
+    `${x.title}:`,
+    cl(f.rarity) && cl(f.type) && `${cl(f.rarity)} ${cl(f.type)} —`,
+    stats(
+      cl(f.status_energy) && `energy ${cl(f.status_energy)}`,
+      cl(f.durability) && `shelf life ${cl(f.durability)}`,
+      cl(f.stack_size) && `stacks to ${cl(f.stack_size)}`,
+      cl(f.weight) && `weight ${cl(f.weight)}`
+    ),
+    "Once Human food stats and effects."
+  ) || introSentence(x.intro);
 ---
 <Base
   title={`${x.title} — Once Human food stats`}
-  description={`${x.title}: Once Human food values — exact stats from the wiki infobox.`}
+  description={description}
 >
   <h1>{x.title}</h1>
   {f.quote && <p class="muted">{f.quote}</p>}

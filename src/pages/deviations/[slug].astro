@@ -6,6 +6,7 @@ import EntryStats from "../../components/EntryStats.astro";
 import deviations from "../../data/oncehuman_deviations.json";
 import mesh from "../../data/mesh.json";
 import { introHtml } from "../../lib/mesh";
+import { cl, pick, desc, stats, introSentence, best } from "../../lib/seo";
 
 export function getStaticPaths() {
   return deviations.map((x) => ({ params: { slug: x.slug }, props: { x } }));
@@ -36,10 +37,22 @@ const __ld = [
     mainEntityOfPage: SITE + "/deviations/" + __slug + "/",
   },
 ];
+
+// SEO: these pages have rich prose intros, so lead with the intro sentence
+// and fall back to the infobox classification.
+const description =
+  introSentence(x.intro, 155) ||
+  desc(
+    `${x.title}:`,
+    cl(f.type) && `${cl(f.type)} Deviation`,
+    pick(f.utility) && `— ${pick(f.utility)},`,
+    pick(f.variants) && `variants: ${pick(f.variants)}.`,
+    "Once Human deviation details."
+  );
 ---
 <Base
   title={`${x.title} — Once Human deviations stats`}
-  description={`${x.title}: Once Human deviations values — exact stats from the wiki infobox.`}
+  description={description}
 >
   <h1>{x.title}</h1>
   {f.quote && <p class="muted">{f.quote}</p>}

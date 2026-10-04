@@ -6,6 +6,7 @@ import EntryStats from "../../components/EntryStats.astro";
 import armor from "../../data/oncehuman_armor.json";
 import mesh from "../../data/mesh.json";
 import { introHtml } from "../../lib/mesh";
+import { cl, pick, desc, stats, introSentence, best } from "../../lib/seo";
 
 export function getStaticPaths() {
   return armor.map((x) => ({ params: { slug: x.slug }, props: { x } }));
@@ -36,10 +37,25 @@ const __ld = [
     mainEntityOfPage: SITE + "/armor/" + __slug + "/",
   },
 ];
+
+// SEO: lead with concrete stats; fall back to the scraped intro sentence.
+const description =
+  desc(
+    `${x.title}:`,
+    cl(f.rarity) && cl(f.armor_type) && `${cl(f.rarity)} ${cl(f.armor_type)}${f.style ? ` (${cl(f.style)})` : ""} —`,
+    stats(
+      cl(f.hp) && `HP ${cl(f.hp)}`,
+      cl(f.durability) && `durability ${cl(f.durability)}`,
+      cl(f.pollution_resist) && `pollution resistance ${cl(f.pollution_resist)}`,
+      cl(f.psi_intensity) && `psi intensity ${cl(f.psi_intensity)}`,
+      cl(f.weight) && `weight ${cl(f.weight)}`
+    ),
+    "Once Human armor stats."
+  ) || introSentence(x.intro);
 ---
 <Base
   title={`${x.title} — Once Human armor stats`}
-  description={`${x.title}: Once Human armor values — exact stats from the wiki infobox.`}
+  description={description}
 >
   <h1>{x.title}</h1>
   {f.quote && <p class="muted">{f.quote}</p>}

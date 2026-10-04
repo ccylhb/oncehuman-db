@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://oncehuman-db.pages.dev/sitemap.xml
+Sitemap: https://oncehuman.lootseer.com/sitemap.xml
