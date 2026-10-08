@@ -20,13 +20,64 @@
     "bad": "#c75146"
   },
   "nav": [
-    { "href": "/armor/", "label": "Armor" },
-    { "href": "/weapons/", "label": "Weapons" },
-    { "href": "/ammo/", "label": "Ammo" },
-    { "href": "/food/", "label": "Food" },
-    { "href": "/deviations/", "label": "Deviations" },
-    { "href": "/rankings/", "label": "Rankings" },
-    { "href": "/food-calculator/", "label": "Food Calculator", "tool": true },
-    { "href": "/search/", "label": "A-Z" }
-  ]
+    {
+      "href": "/armor/",
+      "label": "Armor"
+    },
+    {
+      "href": "/weapons/",
+      "label": "Weapons"
+    },
+    {
+      "href": "/ammo/",
+      "label": "Ammo"
+    },
+    {
+      "href": "/food/",
+      "label": "Food"
+    },
+    {
+      "href": "/deviations/",
+      "label": "Deviations"
+    },
+    {
+      "href": "/rankings/",
+      "label": "Rankings"
+    },
+    {
+      "href": "/food-calculator/",
+      "label": "Food Calculator",
+      "tool": true
+    },
+    {
+      "href": "/search/",
+      "label": "A-Z"
+    }
+  ],
+  "sisterSites": [
+    {
+      "name": "FactorioDB",
+      "url": "https://factorio.lootseer.com",
+      "blurb": "Recipes with exact craft times and ingredient counts."
+    },
+    {
+      "name": "PalworldDB",
+      "url": "https://palworld.lootseer.com",
+      "blurb": "Pal stats, drops, breeding combos and work suitability."
+    },
+    {
+      "name": "SatisfactoryDB",
+      "url": "https://satisfactory.lootseer.com",
+      "blurb": "Crafting recipes with exact per-minute input and output rates."
+    },
+    {
+      "name": "D7TDDB",
+      "url": "https://7dtd.lootseer.com",
+      "blurb": "Zombie health by tier, weapon damage per quality, mods and ammo."
+    }
+  ],
+  "hubSite": {
+    "name": "LootSeer",
+    "url": "https://lootseer.com"
+  }
 }
