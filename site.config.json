@@ -52,6 +52,16 @@
     {
       "href": "/search/",
       "label": "A-Z"
+    },
+    {
+      "href": "/best-armor/",
+      "label": "Best Armor",
+      "tool": true
+    },
+    {
+      "href": "/highest-crit-weapons/",
+      "label": "Highest Crit",
+      "tool": true
     }
   ],
   "sisterSites": [
